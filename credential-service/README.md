@@ -1,37 +1,37 @@
 # Credential Service
 
-### Requisitos
-- Docker y Docker Compose
-- Java 17 (para compilar localmente)
+### Requirements
+- Docker and Docker Compose
+- Java 17 (for local compilation)
 
-### Cómo ejecutar
-1. Levantar todo: `docker compose up --build`
+### How to Run
+1. Bring everything up: `docker compose up --build`
 
-### Ejemplos de Curl
+### Curl Examples
 
-* **Registro de Usuario**
+* **User Registration**  
   `POST http://localhost:8080/api/v1/auth/register`
     ```json
     {
-        "email": "correo@gmail.com",
+        "email": "email@gmail.com",
         "password": "password"
     }
     ```
 
-* **Login**
+* **Login**  
   `POST http://localhost:8080/api/v1/auth/login`
     ```json
     {
-        "email": "correo@gmail.com",
+        "email": "email@gmail.com",
         "password": "password"
     }
     ```
 
 ---
 
-### Gestión de Credenciales (Usuarios)
+### Credential Management (Users)
 
-* **Crear Credencial** (Devuelve el ID generado)
+* **Create Credential** (Returns generated ID)  
   `POST http://localhost:8080/api/v1/credentials`
     ```json
     {
@@ -41,29 +41,30 @@
         "expiryDate": "2026-12-31T23:59:59Z"
     }
     ```
+> **Note:** Although the system has user registration and login, authentication is not required to create a credential. Therefore, the system assigns a random registered user by default.
 
-* **Listar Credenciales** (Paginación por Cursor)
-  `GET http://localhost:8080/api/v1/credentials?userId=[id_del_usuario]&size=2`
+* **List Credentials** (Cursor-based Pagination)  
+  `GET http://localhost:8080/api/v1/credentials?userId=[user_id]&size=2`
 
-* **Listar con Cursor** (Siguiente página)
-  `GET http://localhost:8080/api/v1/credentials?userId=[id_del_usuario]&size=2&cursor=2`
+* **List with Cursor** (Next Page)  
+  `GET http://localhost:8080/api/v1/credentials?userId=[user_id]&size=2&cursor=2`
 
-* **Filtrar por Tipo**
-  `GET http://localhost:8080/api/v1/credentials?userId=[id_del_usuario]&size=2&type=HVAC_LICENSE`
+* **Filter by Type**  
+  `GET http://localhost:8080/api/v1/credentials?userId=[user_id]&size=2&type=HVAC_LICENSE`
 
-* **Obtener Detalle**
-  `GET http://localhost:8080/api/v1/credentials/[id_de_la_credencial]`
+* **Get Details**  
+  `GET http://localhost:8080/api/v1/credentials/[credential_id]`
 
-* **Borrado Lógico (Soft Delete)**
-  `DELETE http://localhost:8080/api/v1/credentials/[id_de_la_credencial]`
-  *Nota: Solo permitido para estados PENDING o REJECTED.*
+* **Soft Delete**  
+  `DELETE http://localhost:8080/api/v1/credentials/[credential_id]`
+  *Note: Only allowed for PENDING or REJECTED states.*
 
 ---
 
-### ⚡ Panel de Administración
+### ⚡ Admin Panel
 
-* **Aprobar Credencial**
-  `PUT http://localhost:8080/api/v1/admin/credentials/[id_de_la_credencial]/status`
+* **Approve Credential**  
+  `PUT http://localhost:8080/api/v1/admin/credentials/[credential_id]/status`
     ```json
     {
         "status": "APPROVED"
@@ -72,15 +73,15 @@
 
 ---
 
-## Lógica de Expiración (Scheduled Job)
+## Expiration Logic (Scheduled Job)
 
-1.  **Expiración Estándar:** Si una licencia `APPROVED` llega a su fecha de expiración, cambia a `EXPIRED`.
-2.  **Periodo de Gracia:** Si existe una renovación en estado `PENDING` para el mismo usuario y tipo de licencia, la licencia antigua se mantiene activa para evitar interrupciones.
+1. **Standard Expiration:** If an `APPROVED` license reaches its expiration date, it changes to `EXPIRED`.
+2. **Grace Period:** If there is a renewal in `PENDING` status for the same user and license type, the old license remains active to avoid interruptions.
 
+---
 
+## System Tests
 
-## Pruebas del Sistema
-
-Se implementaron tests de integración para asegurar el cumplimiento de las reglas de negocio:
-* **Caso A:** Validación de expiración inmediata sin renovación previa.
-* **Caso B:** Validación del mantenimiento de estado durante el periodo de gracia.
+Integration tests were implemented to ensure business rules compliance:
+* **Case A:** Immediate expiration validation without prior renewal.
+* **Case B:** Validation of state maintenance during the grace period.

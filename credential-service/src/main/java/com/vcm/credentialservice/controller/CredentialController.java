@@ -20,9 +20,7 @@ public class CredentialController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public CredentialResponse create(@RequestBody @Valid CredentialRequest request) {
-        // Al no implementar JWT estamos dandole un valor provicional
-        Long userId = 1L;
-        return service.create(request, userId);
+        return service.create(request);
     }
 
     @GetMapping

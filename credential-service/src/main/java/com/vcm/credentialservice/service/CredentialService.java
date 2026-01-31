@@ -7,6 +7,7 @@ import com.vcm.credentialservice.dto.CredentialRequest;
 import com.vcm.credentialservice.dto.CredentialResponse;
 import com.vcm.credentialservice.dto.CursorResponse;
 import com.vcm.credentialservice.repository.CredentialRepository;
+import com.vcm.credentialservice.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -21,10 +22,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CredentialService {
 
+    private final UserRepository userRepository;
     private final CredentialRepository repository;
 
     @Transactional
-    public CredentialResponse create(CredentialRequest dto, Long userId) {
+    public CredentialResponse create(CredentialRequest dto) {
+        // Al no implementar JWT estamos dandole un valor provicional
+        Long userId = userRepository.findRandomUserId()
+                .orElseThrow(() -> new EntityNotFoundException("No hay usuarios en la base de datos"));
+
         Credential credential = Credential.builder()
                 .userId(userId)
                 .type(dto.type())
