@@ -29,7 +29,7 @@ public class CredentialService {
     public CredentialResponse create(CredentialRequest dto) {
         // Al no implementar JWT estamos dandole un valor provicional
         Long userId = userRepository.findRandomUserId()
-                .orElseThrow(() -> new EntityNotFoundException("No hay usuarios en la base de datos"));
+                .orElseThrow(() -> new EntityNotFoundException("There is no users in the database"));
 
         Credential credential = Credential.builder()
                 .userId(userId)

@@ -38,29 +38,7 @@ public interface CredentialRepository extends JpaRepository<Credential, Long> {
     """, nativeQuery = true)
     int expireEligibleCredentials(Instant now, Instant graceThreshold);
 
-    @Query("""
-        SELECT c FROM Credential c
-        WHERE c.status = 'APPROVED'
-          AND c.expiryDate < :today
-          AND c.deletedAt IS NULL
-    """)
-    List<Credential> findExpiredApproved(LocalDate today);
-
-    @Query("""
-        SELECT COUNT(c) > 0 FROM Credential c
-        WHERE c.userId = :userId
-          AND c.type = :type
-          AND c.status = 'PENDING'
-          AND c.createdAt >= :since
-          AND c.deletedAt IS NULL
-    """)
-    boolean hasPendingRenewal(
-            Long userId,
-            CredentialType type,
-            Instant since
-    );
-
-    // Para paginación
+    // for pagination
     @Query("""
         SELECT c FROM Credential c 
         WHERE c.userId = :userId 

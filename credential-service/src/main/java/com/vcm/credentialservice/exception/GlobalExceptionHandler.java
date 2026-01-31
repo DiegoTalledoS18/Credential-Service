@@ -13,7 +13,7 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    // Captura errores de Valid osea "expiryDate must be a future date"
+    // Captures validation errors: "expiryDate must be a future date"
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
@@ -23,7 +23,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 
-    // Cuando se pide un ID que no existe
+    // When a requested ID does not exist
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<Map<String, String>> handleNotFound(EntityNotFoundException ex) {
         Map<String, String> error = new HashMap<>();
@@ -31,7 +31,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
-    // Error inesperado
+    // Unexpected error
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, String>> handleGlobal(Exception ex) {
         ex.printStackTrace();

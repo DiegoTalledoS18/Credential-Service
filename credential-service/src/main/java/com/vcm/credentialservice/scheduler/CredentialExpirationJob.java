@@ -24,7 +24,7 @@ public class CredentialExpirationJob {
         Instant graceThreshold = now.minus(Duration.ofDays(14));
 
         int updatedCount = credentialRepository.expireEligibleCredentials(now, graceThreshold);
-        log.info("Credenciales expiradas: {}", updatedCount);
+        log.info("Expired credentials: {}", updatedCount);
     }
 
 }
